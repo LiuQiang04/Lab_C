@@ -1,0 +1,17 @@
+void find_all_path(vertex* Vertex,path* paths,int j,int n,char* way,int distance,int* nop,int nov){
+    vertex* cur=Vertex+j;     //cur指向当前顶点
+    //if (cur->num==n-1){strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=*distance+Vertex[n-1].hour;memset(way,'\0',100);*distance=0;}
+    if (cur->num==n-1){way[nov]='\0';strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=distance+Vertex[n-1].hour;}
+    for (int i=0;i<10;i++){
+        if (cur->go[i]>0){
+            way[nov]=Vertex[cur->go[i]-1].name;
+            int new_distance=distance+(cur->hour);
+            find_all_path(Vertex,paths,cur->go[i]-1,n,way,new_distance,nop,nov+1);
+            //distance+=(cur->hour);
+            //find_all_path(Vertex,paths,cur->go[i]-1,n,way,distance,nop,nov+1);
+        }
+    }
+}
+
+
+如果把line8,9的代码改为注释的话,最后从第二条路径开始每条路的distance都会多一点点(前面几条主要是多2),但是用new_distance就没事了,不知道为啥
