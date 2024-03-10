@@ -1,0 +1,50 @@
+  首先因为我不是完全按照老师讲的思路来的，用的并不是标准的邻接表，我其实是把一个顶点的所有信息全部存储到一个对应的结构体中.最后的效果还是挺好的，
+我的这种写法比其他同学代码量小了不少，作业3也是用一个DFS就可以搞定😊（有时候写代码前多想一想，因为当前的思路做当前的任务可能是最优的，但是如果把后续的
+任务也考虑进来，也许有更优的方法）(因为我们的作业都是分成几个子任务一步步深入的,所以更需要有一种 "全局观" !) ༼ つ ◕_◕ ༽つ
+  学到的具体的知识点：
+   1.如果要修改某个结构体的数据，并且想给这个结构体取个新名字时，一定要注意，要用指针，
+     不要像下面这段代码的注释这样（            // vertex vv=Vertex[v->go[m-1] - 1];
+                                            // vv.in-=1;                                ）
+
+        void output(vertex* Vertex,int n){
+            vertex* v=Vertex+find_in(Vertex,n);
+            printf("%c ",v->name);
+            v->out=1;
+            int m=0;
+            while (v->go[m++]!=0){
+                // vertex vv=Vertex[v->go[m-1] - 1];   //  这里其实是新建了一个结构体vv，后面vv.in-=1也就
+                // vv.in-=1;                           //     自然不会同步到Vertex[v->go[m-1] - 1]结构体上了
+                vertex* vv=Vertex + v->go[m-1] - 1;    
+                vv->in-=1;                             //只用利用指针，才是真正地对Vertex[v->go[m-1] - 1]的修改
+            }
+        }
+
+      这其实是一个很易错的坑（🕳），但是也是帮助我进一步理解了C语言中指针的作用！😁😁😁
+
+    2.主要是有关深度优先搜索(DFS)的回溯问题的,见代码
+
+       //////////////////用的是深度优先搜索(DFS),这里的int distance 和 int nov个人觉得是关键，一开始用的是int* distance 和 int* nov////////////////
+        void find_all_path(vertex* Vertex,path* paths,int j,int n,char* way,int distance,int* nop,int nov){
+            vertex* cur=Vertex+j;     //cur指向当前顶点
+            //if (cur->num==n-1){strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=*distance+Vertex[n-1].hour;memset(way,'\0',100);*distance=0;}
+            if (cur->num==n-1){way[nov]='\0';strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=distance+Vertex[n-1].hour;}
+            for (int i=0;i<10;i++){
+                if (cur->go[i]>0){
+                    way[nov]=Vertex[cur->go[i]-1].name;
+                    int new_distance=distance+(cur->hour);
+                    find_all_path(Vertex,paths,cur->go[i]-1,n,way,new_distance,nop,nov+1);
+                }
+            }
+        }
+
+
+        关键在于回溯:数据(经过的路径,长度)回到分叉前的状态.我一开始使用全局变量distance记录路径长度,全局变量nov帮助记录way,但是都有一个问题,
+                    那就是无法回溯状态.如果我此时把int* distance 和 int* nov 改为 int distance 和 int nov,这时每次递归distance和nov都是
+                    独立的变量,能实现回溯的要求😘😘😘
+                    (ps: 其实是第八课的encode函数启发了我😊)
+
+
+
+
+
+    
