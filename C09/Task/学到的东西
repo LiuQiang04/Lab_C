@@ -26,7 +26,6 @@
        //////////////////用的是深度优先搜索(DFS),这里的int distance 和 int nov个人觉得是关键，一开始用的是int* distance 和 int* nov////////////////
         void find_all_path(vertex* Vertex,path* paths,int j,int n,char* way,int distance,int* nop,int nov){
             vertex* cur=Vertex+j;     //cur指向当前顶点
-            //if (cur->num==n-1){strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=*distance+Vertex[n-1].hour;memset(way,'\0',100);*distance=0;}
             if (cur->num==n-1){way[nov]='\0';strcpy(paths[(*nop)++].way,way);paths[(*nop)-1].distance=distance+Vertex[n-1].hour;}
             for (int i=0;i<10;i++){
                 if (cur->go[i]>0){
